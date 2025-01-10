@@ -5,7 +5,7 @@ let result;
 let x = "";
 let y = "";
 let operator = "";
-let inputOperator = false;
+let runningTotal = false;
 
 
 
@@ -49,6 +49,11 @@ function isClear(classlist){
     return classlist.contains("clear");
 }
 
+function updateDisplay(val){
+    displayContent += val;
+    display.textContent = displayContent;
+}
+
 
 
 calculator.addEventListener("click", function(btn){
@@ -57,40 +62,53 @@ calculator.addEventListener("click", function(btn){
     
     // if number, add to x as string and update display
     if(isNum(classlist)){
-        displayContent += val;
+        
         // if operator has not been clicked, add values to x
         // if operator has, add values to y
-        inputOperator ? y+=val : x+=val;
+        runningTotal ? y+=val : x+=val;
+        updateDisplay(val);
+        // logic: op is no, means we're only starting x
+        // op is true, starting on y
+        // op is found again and still true, do calculation and make result x, keep op true
+        // op only turned false if we hit equals
+        // so really, inputOperator is actually a runningTotal flag, telling us if we need to start a running total.
+
+        console.log(x, operator, runningTotal,y);
         
-        console.log(x, operator, inputOperator,y);
-        display.textContent = displayContent;
     }
     // if operator, store operator and x, switch operator flag to true, start y val
     else if (isOp(classlist)){
-        displayContent += val;
-        operator = val;
-        inputOperator = true;
-        console.log(x, operator, inputOperator);
-        display.textContent = displayContent;
+        // // if x and y are input
+        // if (runningTotal){
+
+        // }
+        // // if we only have x so far
+        // else if (!runningTotal){
+            displayContent += val;
+            operator = val;
+            runningTotal = true;
+            console.log(x, operator, runningTotal);
+            display.textContent = displayContent;
+        // }
+        
     }
     // if equal, send to operate function
     else if (isEquals(classlist)){
         console.log(parseInt(x), parseInt(y), operator);
         console.log(operate(parseInt(x), parseInt(y), operator));
         result = operate(parseInt(x), parseInt(y), operator);
-        inputOperator = false;
-        displayContent += val;
-        displayContent += result;
-        display.textContent = displayContent;
+        runningTotal = false;
+        let testval = val + result;
+        updateDisplay(testval);
     }
     else if (isClear(classlist)){
-        inputOperator = false;
-        displayContent = "";
+        runningTotal = false;
         x = "";
         y = "";
         operator = "";
         result = "";
-        display.textContent = displayContent;
+        displayContent = "";
+        display.textContent = "";
 
     }
 
