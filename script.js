@@ -1,65 +1,102 @@
 let display = document.getElementById("output");
 let displayContent = "";
 let calculator = document.getElementById("buttons");
-let runningToal, x, y, operator;
+let result;
+let x = "";
+let y = "";
+let operator = "";
+let inputOperator = false;
 
 
 
 // operator functions
 
-function add(x,y){
-    return x + y;
-}
-function sub(x,y){
-    return x - y;
-
-}
-function mult(x,y){
-    return x * y;
-
-}
-function div(x,y){
-    return x / y;
-
-}
-
-
-// choosing the correct operator
-
 function operate(x, y, operator){
     if (operator == "+"){
-        add(x,y);
+        return x + y;
     }
     else if (operator == "-"){
-        sub(x,y);
+        return x - y;
     }
     else if (operator == "*"){
-        mult(x,y);
+        return x * y;
     }
     else if (operator == "/"){
-        div(x,y);
+        return x / y;
     }
+    
 }
 
 
-// testing for operators, returns true if num, false if operator
+// testing for operators, returns true if number
 // based on classes est in html file
 function isNum(classlist){
     return classlist.contains("number");
 }
 
-// thank u google, looked up js check classlist, returns t/f
+// returns true if operator
+function isOp(classlist){
+    return classlist.contains("operator");
+}
 
-calculator.addEventListener("click", function(num){
-    let val = num.target.value;
-    let classlist = num.target.classList;
-    // console.log(classlist.contains("number"));
-    console.log(isNum(classlist));
+// returns true if operator
+function isEquals(classlist){
+    return classlist.contains("equal");
+}
+
+// returns true if button was clear
+function isClear(classlist){
+    return classlist.contains("clear");
+}
+
+
+
+calculator.addEventListener("click", function(btn){
+    let val = btn.target.value;
+    let classlist = btn.target.classList;
+    
+    // if number, add to x as string and update display
+    if(isNum(classlist)){
+        displayContent += val;
+        // if operator has not been clicked, add values to x
+        // if operator has, add values to y
+        inputOperator ? y+=val : x+=val;
+        
+        console.log(x, operator, inputOperator,y);
+        display.textContent = displayContent;
+    }
+    // if operator, store operator and x, switch operator flag to true, start y val
+    else if (isOp(classlist)){
+        displayContent += val;
+        operator = val;
+        inputOperator = true;
+        console.log(x, operator, inputOperator);
+        display.textContent = displayContent;
+    }
+    // if equal, send to operate function
+    else if (isEquals(classlist)){
+        console.log(parseInt(x), parseInt(y), operator);
+        console.log(operate(parseInt(x), parseInt(y), operator));
+        result = operate(parseInt(x), parseInt(y), operator);
+        inputOperator = false;
+        displayContent += val;
+        displayContent += result;
+        display.textContent = displayContent;
+    }
+    else if (isClear(classlist)){
+        inputOperator = false;
+        displayContent = "";
+        x = "";
+        y = "";
+        operator = "";
+        result = "";
+        display.textContent = displayContent;
+
+    }
+
 
     
-    // console.log(e.target.value);
-    // displayContent += e.target.value;
-    // display.textContent = displayContent;
+    
 
 })
 
