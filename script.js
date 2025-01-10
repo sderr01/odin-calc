@@ -62,17 +62,8 @@ calculator.addEventListener("click", function(btn){
     
     // if number, add to x as string and update display
     if(isNum(classlist)){
-        
         runningTotal ? y+=val : x+=val;
-        updateDisplay(val);
-        // logic: op is no, means we're only starting x
-        // op is true, starting on y
-        // op is found again and still true, do calculation and make result x, keep op true
-        // op only turned false if we hit equals
-        // so really, inputOperator is actually a runningTotal flag, telling us if we need to start a running total.
-
-        console.log(x, operator, runningTotal,y);
-        
+        updateDisplay(val);        
     }
     // if operator, store operator and x, switch operator flag to true, start y val
     else if (isOp(classlist)){
@@ -80,12 +71,12 @@ calculator.addEventListener("click", function(btn){
         if (!runningTotal){
             operator = val;
             runningTotal = true;
-            console.log(x, operator, runningTotal);
             updateDisplay(val);
         }
+        // after first operator, add two numbers and make x the total
+        // clear y and update display with new total + operator
         else if (runningTotal){
             let temp = operate(parseInt(x), parseInt(y), operator);
-            console.log(temp,y);
             x = temp;
             y = "";
             displayContent = "";
@@ -93,13 +84,10 @@ calculator.addEventListener("click", function(btn){
             updateDisplay(x+val);
             operator = val;
         }
-        
     }
     // if equal, send to operate function
     else if (isEquals(classlist)){
-        console.log(parseInt(x), parseInt(y), operator);
         result = operate(parseInt(x), parseInt(y), operator);
-        
         let testval = val + result;
         updateDisplay(testval);
     }
