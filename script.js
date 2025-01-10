@@ -90,7 +90,8 @@ calculator.addEventListener("click", function(btn){
             y = "";
             displayContent = "";
             display.textContent = "";
-            updateDisplay(x);
+            updateDisplay(x+val);
+            operator = val;
         }
         
     }
@@ -98,7 +99,7 @@ calculator.addEventListener("click", function(btn){
     else if (isEquals(classlist)){
         console.log(parseInt(x), parseInt(y), operator);
         result = operate(parseInt(x), parseInt(y), operator);
-        runningTotal = false;
+        
         let testval = val + result;
         updateDisplay(testval);
     }
